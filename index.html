@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
+    <title>MLP User Inyerface</title>
+    <style>
+        body {
+            font-family:'Courier New', Courier, monospace;
+            background-color:rgba(0, 73, 156, 0.507);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: whitesmoke;
+            padding: 40px;
+            border: 5px solid #000;
+            box-shadow: 10px 10px 0px #888888;
+        }
+
+        /* The runaway button */
+        #runaway-btn {
+            position: absolute;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: rgb(218, 105, 208);
+            color: white;
+            border: 3px #000;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* Fake background button to mess with their depth perception */
+        .static-btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: rgb(131, 32, 223);
+            color:rgb(223, 32, 191)
+            border: 3px solid #000;
+            opacity: 0.2;
+        }
+
+        /* Upgraded Pinkie Pie themed popup layout */
+        .modal{
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            background: #ff66cc; /* Bright Pinkie Pie Pink*/
+            color: white;
+            padding: 30px;
+            border: 8px dashed #fff0f5;
+            border-radius: 20px;
+            z-index: 1000;
+            text-align: center;
+            box-shadow: 0px 0px 30px rgba(255, 102, 204, 0.8);
+            width: 320px;
+        }
+
+        .modal button {
+            margin: 10px;
+            padding: 12px 25px;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+    </head>
+    <body>
+        <!-- Main Game Screen-->
+        <div class="container">
+            <h1>Click the button to claim your prize!</h1>
+            <p>It's completely free!</p>
+             <button class="static-btn" disabled>Don't Click</button>
+
+             <!-- The actual runaway button -->
+              <button id="runaway-btn" style="top: 55%; left: 45%;">CLAIM NOW!</button>
+        </div>
+
+        <!-- The Pinkie Pie Party Trap Modal with Countdown -->
+         <div id="trap-modal" class="modal">
+            <!-- Guarenteed fallback graphic: No link needed -->
+             <div style="font-size: 60px; margin-bottom: 10px;">🦄🎂🎈</div>
+
+            <h2 style="font-family: 'Comic Sans Ms', sans-serif; color: #fff; text-shadow: 2px 2px #ff007f; margin: 5px 0;">🎉 PARTY TIME! 🎉</h2>
+            
+            <!-- Annoying Countdown timer-->
+         </div id="timer-box" style="background: #000; color: #00ff00; font-family: monospace; font-size: 24px; padding: 10px; margin: 15px auto; width: 220px; border: 3px inset #fff;">
+         TIME LEFT: <span id="countdown-clock">10</span>s
+         </div>
+
+         <p style="font-size: 14px; font-weight: bold; line-height:"> Are you absolutely sure you don't want to join the party?</p>
+
+         <!-- The buttons they must complete before time runs out -->
+          <div id="modal-actions">
+            <button style="background-color: #ff007f; color: white;" onclick="alert('Wrong choice! The timer didn\'t reset!')">Yes</button>
+            <button id="close-modal-btn" style="background-color: #fff; color: #ff66cc;" onclick="closeModal()">No</button>
+          </div>
+          <!-- Audio comes first -->
+          <audio id="horn-sound" src="https:// gfxsounds.com" preload="auto"></audio>
+
+          <!-- 2. The Script Tag comes second -->
+         <script>
+            const button = document.getElementById('runaway-btn');
+            const modal = document.getElementById('trap-modal');
+            const hornSound = document.getElementById('horn-sound');
+            const clockDisplay = document.getElementById('countdown-clock');
+            const timerBox = document.getElementById('timer-box');
+            const closeBtn = document.getElementById('close-modal-btn');
+            
+            let timerINterval = null;
+            let timeLeft = 10;
+
+            // 1. Make the green button teleport to a random position when hovered over
+            button.addEventListener('mouseover', function() {
+                // Calculate a random position within the browser window limits
+                const x = Math.random() * (window.innerWidth - button.clientWidth);
+                const y = Math.random() * (window.innerHeight - button.clientHeight);
+
+                // Assign the new coordinates
+                button.style.left = x + 'px';
+                button.style.top = y + 'px';
+            });
+
+            // 2. Open the modal, play sound, and start the annoying countdown
+            button.addEventListener('click', function() {
+                modal.style.display = 'block';
+                
+                // Play audio
+                horn.Sound.currentTime = 0; 
+                hornSound.play();
+                // Start/Reset Countdown Clock (Ticks down every 10 milliseconds for urgency)
+                clearinterval(timerInterval);
+                timeleft = 10;
+                closeBtn.style.display = 'inline-block'; // Ensure close button is visible 
+                timerBox.style.background = '#000';
+                timerBox.style.color = '#00ff00';
+
+                timerInterval = setInterval(function() {
+                    timeLeft -= 0.01;
+                    clockDisplay.innerText = timeleft.toFixed(2);
+
+                    // Flash red when running dangerously low
+                    if (timeLeft <=3) { 
+                        timerBox.style.background = '#ff0000';
+                        timerBox.style.color = '#fff';
+                    }
+
+                    // When times exprires: Lock them out!
+                    if (timeLeft <=0) {
+                        clearInterval(timerInterval);
+                        clockDisplay.innerText = '0.00';
+                        timerBox.style.background = '#000';
+                        timerBox.style.color = '#ff0000';
+
+                        // Frustrating mechanic: Hide the correct button so they can't leave!
+                        closeBtn.style.display = 'none';
+                        alert("⏱️ TIME EXPIRED! PINKIE PIE'S PARTY IS PERMANENT NOW! CLICK 'YES' TO JOIN FOREVER!");
+                    }
+                }, 10);
+            });
+
+            // 3. Logic to successfully escape the popup
+            function closeModal() {
+                clearInterval(timerInterval); //Stop the countdown
+                modal.style.display = 'none';
+                clockDisplay.textContent = '10';
+                alert("Congratulations, you closed it! But the button is still waiting...");
+            }
+         </script>
+    </body>
+</html>
