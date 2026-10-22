@@ -1,182 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
-    <title>MLP User Inyerface</title>
-    <style>
-        body {
-            font-family:'Courier New', Courier, monospace;
-            background-color:rgba(0, 73, 156, 0.507);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pinkie Chaos User Inyerface Trap</title>
+<style>
+/* 1. GENERAL CANVAS AND WINDOW POSITIONING */
+body {
+font-family: 'Courier New', Courier, monospace;
+background-color: #dc44bb;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+margin: 0;
+overflow: hidden;
+}
 
-        .container {
-            text-align: center;
-            background: whitesmoke;
-            padding: 40px;
-            border: 5px solid #000;
-            box-shadow: 10px 10px 0px #888888;
-        }
+.container {
+text-align: center;
+background: rgb(113, 13, 147);
+padding: 40px;
+border: 5px solid #fbf4f4;
+box-shadow: 10px 10px 0px #888888;
+}
 
-        /* The runaway button */
-        #runaway-btn {
-            position: absolute;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            background-color: rgb(218, 105, 208);
-            color: white;
-            border: 3px #000;
-            cursor: pointer;
-            z-index: 10;
-        }
+/* 2. THE CHASSIS DECORATION FOR THE GREEN RUNAWAY BUTTON */
+#runaway-btn {
+position: absolute;
+padding: 15px 30px;
+font-size: 18px;
+font-weight: bold;
+background-color: #ff07d1; /* Bright Green */
+color: white;
+border: 3px solid #000;
+cursor: pointer;
+z-index: 10;
+}
 
-        /* Fake background button to mess with their depth perception */
-        .static-btn {
-            padding: 15px 30px;
-            font-size: 18px;
-            background-color: rgb(131, 32, 223);
-            color:rgb(223, 32, 191)
-            border: 3px solid #000;
-            opacity: 0.2;
-        }
+.static-btn {
+padding: 15px 30px;
+font-size: 18px;
+background-color: #e74c3c;
+color: white;
+border: 3px solid #000;
+opacity: 0.2;
+}
 
-        /* Upgraded Pinkie Pie themed popup layout */
-        .modal{
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%,-50%);
-            background: #ff66cc; /* Bright Pinkie Pie Pink*/
-            color: white;
-            padding: 30px;
-            border: 8px dashed #fff0f5;
-            border-radius: 20px;
-            z-index: 1000;
-            text-align: center;
-            box-shadow: 0px 0px 30px rgba(255, 102, 204, 0.8);
-            width: 320px;
-        }
+/* 3. THE POPUP AD WINDOW DECORATION (BRIGHT PINK) */
+.modal {
+display: none; /* Keeps it completely hidden on startup */
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: #ff66cc; /* Bright Pinkie Pink Background */
+color: white;
+padding: 25px;
+border: 8px dashed #fff0f5;
+border-radius: 20px;
+z-index: 1000;
+text-align: center;
+box-shadow: 0px 0px 50px rgba(255, 102, 204, 0.9);
+width: 360px;
+}
 
-        .modal button {
-            margin: 10px;
-            padding: 12px 25px;
-            font-weight: bold;
-            font-size: 16px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
-    </head>
-    <body>
-        <!-- Main Game Screen-->
-        <div class="container">
-            <h1>Click the button to claim your prize!</h1>
-            <p>It's completely free!</p>
-             <button class="static-btn" disabled>Don't Click</button>
+/* Animated GIF formatting sizing constraints */
+.modal img {
+width: 100%;
+max-width: 220px;
+height: auto;
+border-radius: 12px;
+border: 3px solid #fff;
+margin-bottom: 10px;
+}
 
-             <!-- The actual runaway button -->
-              <button id="runaway-btn" style="top: 55%; left: 45%;">CLAIM NOW!</button>
-        </div>
+/* 4. SOLID BLACK DIGITAL CLOCK PANEL DESIGN */
+#timer-box {
+background-color: #000000; /* Solid Black Counter Background */
+color: #00ff00; /* Neon Green Text */
+font-family: 'Courier New', Courier, monospace;
+font-size: 26px;
+font-weight: bold;
+padding: 12px;
+margin: 15px auto;
+width: 220px;
+border: 4px inset #fff;
+border-radius: 5px;
+}
 
-        <!-- The Pinkie Pie Party Trap Modal with Countdown -->
-         <div id="trap-modal" class="modal">
-            <!-- Guarenteed fallback graphic: No link needed -->
-             <div style="font-size: 60px; margin-bottom: 10px;">🦄🎂🎈</div>
+.modal button {
+margin: 10px;
+padding: 12px 25px;
+font-weight: bold;
+font-size: 16px;
+border-radius: 5px;
+border: none;
+cursor: pointer;
+}
+</style>
+</head>
+<body>
 
-            <h2 style="font-family: 'Comic Sans Ms', sans-serif; color: #fff; text-shadow: 2px 2px #ff007f; margin: 5px 0;">🎉 PARTY TIME! 🎉</h2>
-            
-            <!-- Annoying Countdown timer-->
-         </div id="timer-box" style="background: #000; color: #00ff00; font-family: monospace; font-size: 24px; padding: 10px; margin: 15px auto; width: 220px; border: 3px inset #fff;">
-         TIME LEFT: <span id="countdown-clock">10</span>s
-         </div>
+<!-- Main Entry Sandbox Area -->
+<div class="container">
+<h1>Click the button to claim your prize!</h1>
+<p>It's completely free and totally not frustrating.</p>
+<button class="static-btn" disabled>Don't Click</button>
+<button id="runaway-btn" style="top: 55%; left: 45%;">CLAIM NOW!</button>
+</div>
 
-         <p style="font-size: 14px; font-weight: bold; line-height:"> Are you absolutely sure you don't want to join the party?</p>
+<!-- The Pinkie Pie Popup Ad Window -->
+<div id="trap-modal" class="modal">
+<!-- Live Animated Pinkie Pie Party Cannon Link Embed -->
+<img src="https://tenor.com/view/my-little-pony-mlp-canon-gif-11340129" alt="Pinkie Pie Confetti Cannon">
 
-         <!-- The buttons they must complete before time runs out -->
-          <div id="modal-actions">
-            <button style="background-color: #ff007f; color: white;" onclick="alert('Wrong choice! The timer didn\'t reset!')">Yes</button>
-            <button id="close-modal-btn" style="background-color: #fff; color: #ff66cc;" onclick="closeModal()">No</button>
-          </div>
-          <!-- Audio comes first -->
-          <audio id="horn-sound" src="https:// gfxsounds.com" preload="auto"></audio>
+<h2 style="font-family: 'Comic Sans MS', sans-serif; color: #fff; text-shadow: 2px 2px #ff007f; margin: 5px 0;">🎉 PARTY TIME! 🎉</h2>
 
-          <!-- 2. The Script Tag comes second -->
-         <script>
-            const button = document.getElementById('runaway-btn');
-            const modal = document.getElementById('trap-modal');
-            const hornSound = document.getElementById('horn-sound');
-            const clockDisplay = document.getElementById('countdown-clock');
-            const timerBox = document.getElementById('timer-box');
-            const closeBtn = document.getElementById('close-modal-btn');
-            
-            let timerINterval = null;
-            let timeLeft = 10;
+<!-- Black Digital Background Panel -->
+<div id="timer-box">
+TIME LEFT: <span id="countdown-clock">10.00</span>s
+</div>
 
-            // 1. Make the green button teleport to a random position when hovered over
-            button.addEventListener('mouseover', function() {
-                // Calculate a random position within the browser window limits
-                const x = Math.random() * (window.innerWidth - button.clientWidth);
-                const y = Math.random() * (window.innerHeight - button.clientHeight);
+<p style="font-size: 15px; font-weight: bold; line-height: 1.4; color: #fff; margin: 10px 0;">
+Are you absolutely sure you don't want to join the party?
+</p>
 
-                // Assign the new coordinates
-                button.style.left = x + 'px';
-                button.style.top = y + 'px';
-            });
+<div id="modal-actions">
+<button style="background-color: #ff007f; color: white;" onclick="alert('Wrong choice! The timer didn\'t reset!')">Yes</button>
+<button id="close-modal-btn" style="background-color: #fff; color: #ff66cc;" onclick="closeModal()">No</button>
+</div>
+</div>
 
-            // 2. Open the modal, play sound, and start the annoying countdown
-            button.addEventListener('click', function() {
-                modal.style.display = 'block';
-                
-                // Play audio
-                horn.Sound.currentTime = 0; 
-                hornSound.play();
-                // Start/Reset Countdown Clock (Ticks down every 10 milliseconds for urgency)
-                clearinterval(timerInterval);
-                timeleft = 10;
-                closeBtn.style.display = 'inline-block'; // Ensure close button is visible 
-                timerBox.style.background = '#000';
-                timerBox.style.color = '#00ff00';
+<!-- AUDIO SOURCE COMES BEFORE RUNTIME CONTROLLER SCRIPT -->
+<audio id="horn-sound" src="https://gfxsounds.com/sound-effect/party-horn/" preload="auto"></audio>
 
-                timerInterval = setInterval(function() {
-                    timeLeft -= 0.01;
-                    clockDisplay.innerText = timeleft.toFixed(2);
+<!-- CORE INTERACTION MECHANICS SCRIPT -->
+<script>
+const button = document.getElementById('runaway-btn');
+const modal = document.getElementById('trap-modal');
+const hornSound = document.getElementById('horn-sound');
+const clockDisplay = document.getElementById('countdown-clock');
+const timerBox = document.getElementById('timer-box');
+const closeBtn = document.getElementById('close-modal-btn');
 
-                    // Flash red when running dangerously low
-                    if (timeLeft <=3) { 
-                        timerBox.style.background = '#ff0000';
-                        timerBox.style.color = '#fff';
-                    }
+let timerInterval = null;
+let timeLeft = 10.00;
 
-                    // When times exprires: Lock them out!
-                    if (timeLeft <=0) {
-                        clearInterval(timerInterval);
-                        clockDisplay.innerText = '0.00';
-                        timerBox.style.background = '#000';
-                        timerBox.style.color = '#ff0000';
+// Force hide on launch to fix style loading bugs
+if(modal) {
+modal.style.display = 'none';
+}
 
-                        // Frustrating mechanic: Hide the correct button so they can't leave!
-                        closeBtn.style.display = 'none';
-                        alert("⏱️ TIME EXPIRED! PINKIE PIE'S PARTY IS PERMANENT NOW! CLICK 'YES' TO JOIN FOREVER!");
-                    }
-                }, 10);
-            });
+// 1. Runaway Function: Green target escapes mouse cursor boundaries
+if(button) {
+button.addEventListener('mouseover', function() {
+const x = Math.random() * (window.innerWidth - button.clientWidth);
+const y = Math.random() * (window.innerHeight - button.clientHeight);
+button.style.left = x + 'px';
+button.style.top = y + 'px';
+});
+}
 
-            // 3. Logic to successfully escape the popup
-            function closeModal() {
-                clearInterval(timerInterval); //Stop the countdown
-                modal.style.display = 'none';
-                clockDisplay.textContent = '10';
-                alert("Congratulations, you closed it! But the button is still waiting...");
-            }
-         </script>
-    </body>
+// 2. Click Handler: Pops open the Ad, fires music, sets high-speed ticker
+if(button) {
+button.addEventListener('click', function() {
+if(modal) modal.style.display = 'block';
+
+// Optimized audio condition to prevent VS Code check warnings
+if (hornSound) {
+hornSound.currentTime = 0;
+hornSound.play().catch(e => console.log("Audio waiting for active click interaction."));
+}
+
+// Reset Clock Counter Properties
+clearInterval(timerInterval);
+timeLeft = 10.00;
+if(closeBtn) closeBtn.style.display = 'inline-block';
+if(timerBox) {
+timerBox.style.backgroundColor = '#000000';
+timerBox.style.color = '#00ff00';
+}
+
+// Millennium Ticker Module (Triggers changes every 10 milliseconds)
+timerInterval = setInterval(function() {
+timeLeft -= 0.01;
+if(clockDisplay) clockDisplay.innerText = timeLeft.toFixed(2);
+
+// Critical Alarm: Shift black interface backdrop to warning neon-red
+if (timeLeft <= 3.00 && timerBox) {
+timerBox.style.backgroundColor = '#ff0000';
+timerBox.style.color = '#ffffff';
+}
+
+// Zero Expiry Execution: Button locks out
+if (timeLeft <= 0) {
+clearInterval(timerInterval);
+if(clockDisplay) clockDisplay.innerText = "0.00";
+if(timerBox) {
+timerBox.style.backgroundColor = '#000000';
+timerBox.style.color = '#ff0000';
+}
+if(closeBtn) closeBtn.style.display = 'none';
+alert("⏰ TIME EXPIRED! Pinkie Pie's party is permanent now. Click 'Yes' to stay forever!");
+}
+}, 10);
+});
+}
+
+// 3. Exit Escape Routing
+function closeModal() {
+clearInterval(timerInterval);
+if(modal) modal.style.display = 'none';
+alert("Congratulations, you closed it under pressure! But the button reset...");
+}
+</script>
+
+</body>
 </html>
